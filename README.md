@@ -14,6 +14,3 @@ Site desenvolvido para realizar busca de IP
 
 Ao inserir o endereço de Ip desejado, o site ira realizar uma busca para saber a localização, Fuso horário e até mesmo o provedor de internet
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
