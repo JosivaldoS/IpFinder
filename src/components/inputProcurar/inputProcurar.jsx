@@ -3,23 +3,10 @@ import React from "react"
 
 export default function InputProcurar(){
 
-
-    let enderecoIp = 9
-
-    /*}
-
-    useEffect(() => {
-        fetch('https://geo.ipify.org/api/v2/country,city?apiKey=at_JH7C5Zg0ven1hiDeuPc6DUQCrgVeE&ipAddress=29.212.190.192')
-            .then(response => response.json())
-            .then(data => console.log(data.location))
-            // Caso eu queira puxar algum valor, por exemplo a cidade é só mudar o data.location para data.location.city
-            .catch(err => console.error(err))
-    }, [])
-    */
-
     return (
         <>
-            <input></input>
+            <input placeholder="Busque por qualquer endereço de Ip ou domínio"></input>
+            <button>buscar</button>
         </>
     )
 }
