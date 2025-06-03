@@ -50,7 +50,20 @@ export default function ResultadoLocalizacao() {
 
         if (/^[0-9.]*$/.test(ipInformado)) {
             fetch(`https://geo.ipify.org/api/v2/country,city?apiKey=at_JH7C5Zg0ven1hiDeuPc6DUQCrgVeE&ipAddress=${ipInformado}`)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    if (response.status === 422) {
+                        throw new Error('Ip inválido ou não encontrado')
+                    } else if (response.status === 429) {
+                        throw new Error('Muitas requisições solicitadas, Aguarde.')
+                    } else if (response.status === 403) {
+                        throw new Error('kkkk, lascou')
+                    } else {
+                        throw new Error('Erro ao buscar os dados')
+                    }
+                }
+                return response.json()
+            })
             .then(data => {
                 setCidade(data.location.city)
                 setEstado(data.location.region)
@@ -60,7 +73,7 @@ export default function ResultadoLocalizacao() {
             })
             // Caso eu queira puxar algum valor, por exemplo a cidade é só mudar o data.location para data.location.city
 
-            .catch(err => alert(err))
+            .catch(err => setErroSpan(err.message))
         } else {
             setErroSpan('Ip digitado inválido, digite novamente')
         }
