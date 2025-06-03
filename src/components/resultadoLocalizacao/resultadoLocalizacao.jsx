@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
 
 export default function ResultadoLocalizacao() {
@@ -44,6 +46,21 @@ export default function ResultadoLocalizacao() {
         }
     */
 
+    useEffect(() => {
+        const map = L.map('map', {
+            center: [51.505, -0.09],
+            zoom: 13
+        });
+        // Se quiser adicionar tiles:
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Opcional: limpar o mapa ao desmontar
+        return () => {
+            map.remove();
+        };
+    }, []);
 
     const buscarDados = () => {
         setErroSpan('')
@@ -107,6 +124,7 @@ export default function ResultadoLocalizacao() {
                 <p>Provedor de internet</p>
                 <label id="resultadoProvedorInternet">{provedorInternet}</label>
             </div>
+            <div id="map"></div>
         </div>
     )
 }
