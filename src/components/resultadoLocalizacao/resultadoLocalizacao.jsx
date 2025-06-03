@@ -11,6 +11,7 @@ export default function ResultadoLocalizacao() {
     let [postalCode, setPostalCode] = useState('')
     let [fusoHorario, setFusoHorario] = useState('')
     let [provedorInternet, setProvedorInternet] = useState('')
+    let [erroSpan, setErroSpan] = useState('')
     /*
         Formato json
         {
@@ -45,10 +46,10 @@ export default function ResultadoLocalizacao() {
 
 
     const buscarDados = () => {
+        setErroSpan('')
 
-        if (ipInformado)
-
-        fetch(`https://geo.ipify.org/api/v2/country,city?apiKey=at_JH7C5Zg0ven1hiDeuPc6DUQCrgVeE&ipAddress=${ipInformado}`)
+        if (/^[0-9.]*$/.test(ipInformado)) {
+            fetch(`https://geo.ipify.org/api/v2/country,city?apiKey=at_JH7C5Zg0ven1hiDeuPc6DUQCrgVeE&ipAddress=${ipInformado}`)
             .then(response => response.json())
             .then(data => {
                 setCidade(data.location.city)
@@ -60,6 +61,11 @@ export default function ResultadoLocalizacao() {
             // Caso eu queira puxar algum valor, por exemplo a cidade é só mudar o data.location para data.location.city
 
             .catch(err => alert(err))
+        } else {
+            setErroSpan('Ip digitado inválido, digite novamente')
+        }
+
+
     }
 
     return (
@@ -70,6 +76,7 @@ export default function ResultadoLocalizacao() {
                 placeholder="Busque por qualquer endereço de Ip ou domínio"
             />
             <button onClick={buscarDados} disabled={!ipInformado}>buscar</button>
+            <span>{erroSpan}</span>
 
             <div>
                 <p>Endereço de Ip</p>
