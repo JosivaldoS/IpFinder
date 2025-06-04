@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import './ResultadoLocalizacao.css'
 
 
 export default function ResultadoLocalizacao() {
@@ -74,7 +75,7 @@ export default function ResultadoLocalizacao() {
                     } else if (response.status === 429) {
                         throw new Error('Muitas requisições solicitadas, Aguarde.')
                     } else if (response.status === 403) {
-                        throw new Error('kkkk, lascou')
+                        throw new Error('Acesso negado. Porfavor verifique a chave de API.')
                     } else {
                         throw new Error('Erro ao buscar os dados')
                     }
@@ -104,25 +105,29 @@ export default function ResultadoLocalizacao() {
                 value={ipInformado}
                 onChange={(e) => setIpInformado(e.target.value)}
                 placeholder="Busque por qualquer endereço de Ip ou domínio"
+                id='inputBuscar'
             />
-            <button onClick={buscarDados} disabled={!ipInformado}>buscar</button>
+            <button onClick={buscarDados} disabled={!ipInformado} id='botaoBuscar'>{'>'}</button>
             <span>{erroSpan}</span>
 
-            <div>
-                <p>Endereço de Ip</p>
-                <label id="resultadoEnderecoIp">{ipInformado}</label>
-            </div>
-            <div>
-                <p>Localização</p>
-                <label id="resultadoLocalizacao">{`${cidade}, ${estado} ${postalCode}`}</label>
-            </div>
-            <div>
-                <p>Fuso horário</p>
-                <label id="resultadoFusoHorario">{fusoHorario}</label>
-            </div>
-            <div>
-                <p>Provedor de internet</p>
-                <label id="resultadoProvedorInternet">{provedorInternet}</label>
+            <div id='campoResultado'>
+                <div>
+                    <p>Endereço de Ip</p>
+                    <label id="resultadoEnderecoIp">{ipInformado}</label>
+                </div>
+                <div>
+                    <p>Localização</p>
+                    <label id="resultadoLocalizacao">{`${cidade}, ${estado} ${postalCode}`}</label>
+                </div>
+                <div>
+                    <p>Fuso horário</p>
+                    <label id="resultadoFusoHorario">{fusoHorario}</label>
+                </div>
+                <div>
+                    <p>Provedor de internet</p>
+                    <label id="resultadoProvedorInternet">{provedorInternet}</label>
+                </div>
+                
             </div>
             <div id="map"></div>
         </div>
