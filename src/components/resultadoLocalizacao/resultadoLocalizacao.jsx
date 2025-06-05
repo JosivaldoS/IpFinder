@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './ResultadoLocalizacao.css'
@@ -6,8 +6,8 @@ import './ResultadoLocalizacao.css'
 
 export default function ResultadoLocalizacao() {
     let [ipInformado, setIpInformado] = useState('')
-    // let [coorX, setCoorX] = useState('')
-    // let [coorY, setCoorY] = useState('')
+    let [coorX, setCoorX] = useState('')
+    let [coorY, setCoorY] = useState('')
 
     let [cidade, setCidade] = useState('')
     let [estado, setEstado] = useState('')
@@ -47,21 +47,36 @@ export default function ResultadoLocalizacao() {
         }
     */
 
+    const mapRef = useRef(null);
+    const markerRef = useRef(null);
+
     useEffect(() => {
-        const map = L.map('map', {
+        mapRef.current = L.map('map', {
             center: [51.505, -0.09],
             zoom: 13
         });
-        // Se quiser adicionar tiles:
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
+        }).addTo(mapRef.current);
 
-        // Opcional: limpar o mapa ao desmontar
         return () => {
-            map.remove();
+            mapRef.current.remove();
         };
     }, []);
+
+
+    useEffect(() => {
+        if (mapRef.current && coorX && coorY) {
+            mapRef.current.setView([coorX, coorY], 13);
+
+            
+            if (markerRef.current) {
+                markerRef.current.remove();
+            }
+
+            markerRef.current = L.marker([coorX, coorY]).addTo(mapRef.current);
+        }
+    }, [coorX, coorY]);
 
     const buscarDados = () => {
         setErroSpan('')
@@ -88,6 +103,8 @@ export default function ResultadoLocalizacao() {
                 setPostalCode(data.location.postalCode)
                 setFusoHorario(data.location.timezone)
                 setProvedorInternet(data.isp)
+                setCoorX(data.location.lat)
+                setCoorY(data.location.lng)
             })
             // Caso eu queira puxar algum valor, por exemplo a cidade é só mudar o data.location para data.location.city
 
@@ -101,14 +118,18 @@ export default function ResultadoLocalizacao() {
 
     return (
         <div id='ResultadoLocalizacao'>
-            <input
-                value={ipInformado}
-                onChange={(e) => setIpInformado(e.target.value)}
-                placeholder="Busque por qualquer endereço de Ip ou domínio"
-                id='inputBuscar'
-            />
-            <button onClick={buscarDados} disabled={!ipInformado} id='botaoBuscar'>{'>'}</button>
-            <span>{erroSpan}</span>
+            <div>
+                <div>
+                    <input
+                        value={ipInformado}
+                        onChange={(e) => setIpInformado(e.target.value)}
+                        placeholder="Busque por qualquer endereço de Ip ou domínio"
+                        id='inputBuscar'
+                    />
+                    <button onClick={buscarDados} disabled={!ipInformado} id='botaoBuscar'>{'>'}</button>
+                </div>
+                <span>{erroSpan}</span>
+            </div>
 
             <div id='campoResultado'>
                 <div>
